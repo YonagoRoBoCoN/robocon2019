@@ -5,7 +5,7 @@
 // #include <serial_communication_v0.h>
 #include "PwmMotor.h"
 //上下，前後，つかむ
-const int air_pin[3] = {4, 2, 3};
+const int air_pin[3] = {A1, A2, A3};
 boolean air_state[3];
 int speed[3];
 // uint8_t values[5];
@@ -43,16 +43,6 @@ void loop()
             air_move(mdblack_datas[3]);
             lasttime = millis();
         }
-        // if (read_bytes(Serial, values, 5) != -1)
-        // {
-        //     for (int i = 0; i < 3; i++)
-        //     {
-        //         //v[3]のi番目hが0だと正転，1だと逆転　(※PWMはv[i]の大きさ)?演算子
-        //         int pwm = ((values[3] >> i) & 1 == 0) ? values[i] : -values[i];
-        //         motor[i].speed(pwm);
-        //     }
-        //     air_move(values[4]);
-        // }
     }
     if ((millis() - lasttime) > 100)
         omni(0, 0, 0);
