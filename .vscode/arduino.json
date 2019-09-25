@@ -2,5 +2,5 @@
     "board": "arduino:avr:nano",
     "configuration": "cpu=atmega328old",
     "programmer": "AVR ISP",
-    "sketch": "Arduino\\MD_Green\\MD_black.ino"
+    "sketch": "Arduino\\MD_Green\\MD_Green.ino"
 }

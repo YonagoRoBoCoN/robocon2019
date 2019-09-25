@@ -13,11 +13,9 @@ uint8_t mdblack_datas[4];
 unsigned long lasttime = 0;
 
 PwmMotor motor[3] = {
-    // PwmMotor(2, 4, 3),
-    PwmMotor(A2, A1, 11),
-    PwmMotor(13, A3, 10),
-    // PwmMotor(8, 12, 9),
-    PwmMotor(5, 7, 6),
+    PwmMotor(4, 2, 3),
+    PwmMotor(7, 5, 6),
+    PwmMotor(A0, 8, 9),
 
 };
 
