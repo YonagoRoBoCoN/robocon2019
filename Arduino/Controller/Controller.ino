@@ -1,22 +1,24 @@
 //Morita Daiki 2019 @NIT.yonago
-//送信基板Atmega328p?
+//マイコン:arduino pro mini 互換（自作）
 #include <WiiChuck.h>
 
+//つないだアクセサリーの名前をWiiとする
 Accessory Wii;
+
+//設定
 void setup()
 {
-  Serial.begin(115200);
-  pinMode(A2, OUTPUT);
-  pinMode(A3, OUTPUT);
-  digitalWrite(A2, LOW);
-  digitalWrite(A3, LOW);
-  delay(100);
-  digitalWrite(A3, HIGH);
-  digitalWrite(A2, LOW);
-  delay(100);
-  Wii.begin();
-  if (Wii.type == Unknown)
-    Wii.type = WIICLASSIC;
+  Serial.begin(115200);    //シリアルボートレート
+  pinMode(A2, OUTPUT);     //GNDを出力ピンで代用の時
+  pinMode(A3, OUTPUT);     //+5Vを出力ピンで代用の時
+  digitalWrite(A2, LOW);   //GNDを出力ピンで代用の時
+  digitalWrite(A3, LOW);   //電源をLOWにしてコントローラ初期化
+  delay(100);              //ちょい待つ
+  digitalWrite(A3, HIGH);  //+5V出力
+  delay(100);              //ちょい待つ
+  Wii.begin();             //コントローラ接続
+  if (Wii.type == Unknown) //Wiiの種類が分からないとき
+    Wii.type = WIICLASSIC; //クラシックコントローラーだよ
 }
 void loop()
 {
@@ -46,7 +48,7 @@ void loop()
   wii_data[17] = Wii.getJoyXRight();
   wii_data[18] = Wii.getJoyYRight();
 
-  Serial.write(0xff);
-  Serial.write(wii_data, 19);
-  delay(5);
+  Serial.write(0xff);         //ヘッダ＝11111111
+  Serial.write(wii_data, 19); //19個のデータ送信
+  delay(5);                   //５ｍｓ待つ
 }
