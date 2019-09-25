@@ -1,7 +1,7 @@
 #include "hanging_system.h"
 #include <Arduino.h>
 
-hanging_system_v3::hanging_system_v3(uint8_t spp_pin, uint8_t spm_pin, uint8_t air_pin, unsigned int deg_pdef, unsigned int deg_mdef, unsigned int t1, unsigned int t2, unsigned int tc)
+hanging_system::hanging_system(uint8_t spp_pin, uint8_t spm_pin, uint8_t air_pin, unsigned int deg_pdef, unsigned int deg_mdef, unsigned int t1, unsigned int t2, unsigned int tc)
 {
     pinMode(air_pin, OUTPUT); //出力
     spp.attach(spp_pin);      //サーボ初期化
@@ -21,13 +21,13 @@ hanging_system_v3::hanging_system_v3(uint8_t spp_pin, uint8_t spm_pin, uint8_t a
     t_2 = t2; //リロード時間
     t_c = tc; //上下時間
 }
-void hanging_system_v3::air_change()
+void hanging_system::air_change()
 {
     digitalWrite(air, !now_air_pos); //エアを今と反対の出力にする
     air_change_time = millis();      //エアの動作開始時間を記録
     air_is_moving = true;            //エア動作中に状態変更
 }
-void hanging_system_v3::hang(boolean hang_pos, unsigned int deg1, unsigned int deg2) //指定したほうに供給(deg2=初期位置)
+void hanging_system::hang(boolean hang_pos, unsigned int deg1, unsigned int deg2) //指定したほうに供給(deg2=初期位置)
 {
     deg_1 = deg1;
     deg_2 = deg2;
@@ -35,12 +35,12 @@ void hanging_system_v3::hang(boolean hang_pos, unsigned int deg1, unsigned int d
     if (now_air_pos != hang_pos)  //今供給不可能位置なら
         air_change();             //エアを逆にして，
 }
-void hanging_system_v3::empty_hang(boolean hang_pos) //かけずに指定されたほうを上げる
+void hanging_system::empty_hang(boolean hang_pos) //かけずに指定されたほうを上げる
 {
     if (now_air_pos == hang_pos) //逆位置なら
         air_change();            //エアを逆にする
 }
-void hanging_system_v3::always_run_function() //常時動作して状態更新関数
+void hanging_system::always_run_function() //常時動作して状態更新関数
 {
     if (air_is_moving && (millis() - air_change_time) > t_c) //エアが動いてて一定時間たったら
     {
@@ -66,7 +66,7 @@ void hanging_system_v3::always_run_function() //常時動作して状態更新�
         spm.detach();
     }
 }
-void hanging_system_v3::servo_move(int deg) //サーボ動作関数
+void hanging_system::servo_move(int deg) //サーボ動作関数
 {
     if (now_air_pos == 0) //今下なら
     {
@@ -80,7 +80,7 @@ void hanging_system_v3::servo_move(int deg) //サーボ動作関数
     }
 }
 
-void hanging_system_v3::show_all_state()
+void hanging_system::show_all_state()
 {
     Serial.print("sst:");
     Serial.print(supply_start_time);

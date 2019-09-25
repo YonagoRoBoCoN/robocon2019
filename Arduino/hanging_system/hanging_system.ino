@@ -9,8 +9,8 @@ const int degpB[2] = {90, 100};
 const int degmB[2] = {90, 80};
 
 //spp,spm,air,degpdef,degmdef,t1,t2,tc
-hanging_system_v3 unit_A(2, 3, 11, degpA[0], degmA[0], 500, 300, 1000);
-hanging_system_v3 unit_B(4, 5, 12, degpB[0], degmB[0], 500, 300, 1000);
+hanging_system unit_A(2, 3, 11, degpA[0], degmA[0], 500, 300, 1000);
+hanging_system unit_B(4, 5, 12, degpB[0], degmB[0], 500, 300, 1000);
 
 #define SAFETYTIME 100
 
@@ -105,33 +105,33 @@ void loop()
    // delay(1);
 }
 
-void motor_data_set(int *speed, uint8_t *send_data)
-{
-   send_data[3] = 0; //符号初期化
-   for (int i = 0; i < 3; i++)
-   {
-      send_data[i] = abs(speed[i]);        //0~2 Byteは速度の大きさ
-      send_data[3] |= (speed[i] < 0) << i; //3 Byte目は各モーターの回転方向
-   }
-}
+// void motor_data_set(int *speed, uint8_t *send_data)
+// {
+//    send_data[3] = 0; //符号初期化
+//    for (int i = 0; i < 3; i++)
+//    {
+//       send_data[i] = abs(speed[i]);        //0~2 Byteは速度の大きさ
+//       send_data[3] |= (speed[i] < 0) << i; //3 Byte目は各モーターの回転方向
+//    }
+// }
 
-void omni(int vx, int vy, int vrot, int *speed) //-31~32,-31~32,-15~16
-{
-   float vtheta = vrot * 10.0;              //旋回成分 16*10=160ismax
-   float v = sqrt(vx * vx + vy * vy) * 5.0; //32*1.414=45   (pwm)255/45=5.6  5倍にしとく
-   float theta = atan2(vy, vx);             //移動方向
-   float R[3] = {0.0, 1.0, 1.0};            //タイヤの配置補正（タイヤ１は回転中心なので，vrot=0）
-   for (int i = 0; i < 3; i++)              //スピード仮設定
-      speed[i] = -v * cos(theta - PI * 2.0 / 3.0 * i) + vtheta * R[i];
-   int max = 0;                //speed最大値
-   for (int i = 0; i < 3; i++) //スピード最大値を取得
-      max = max(abs(speed[i]), max);
-   for (int i = 0; i < 3; i++) //スピード最大値の範囲を-255~255に収める．
-      speed[i] = map(speed[i], -max, max, -255, 255);
-}
+// void omni(int vx, int vy, int vrot, int *speed) //-31~32,-31~32,-15~16
+// {
+//    float vtheta = vrot * 10.0;              //旋回成分 16*10=160ismax
+//    float v = sqrt(vx * vx + vy * vy) * 5.0; //32*1.414=45   (pwm)255/45=5.6  5倍にしとく
+//    float theta = atan2(vy, vx);             //移動方向
+//    float R[3] = {0.0, 1.0, 1.0};            //タイヤの配置補正（タイヤ１は回転中心なので，vrot=0）
+//    for (int i = 0; i < 3; i++)              //スピード仮設定
+//       speed[i] = -v * cos(theta - PI * 2.0 / 3.0 * i) + vtheta * R[i];
+//    int max = 0;                //speed最大値
+//    for (int i = 0; i < 3; i++) //スピード最大値を取得
+//       max = max(abs(speed[i]), max);
+//    for (int i = 0; i < 3; i++) //スピード最大値の範囲を-255~255に収める．
+//       speed[i] = map(speed[i], -max, max, -255, 255);
+// // }
 
-void emergency_situation(uint8_t *send_data)
-{
-   for (int i = 0; i < 3; i++)
-      send_data[i] = 0;
-}
+// void emergency_situation(uint8_t *send_data)
+// {
+//    for (int i = 0; i < 3; i++)
+//       send_data[i] = 0;
+// }

@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <Servo.h>
 
-class hanging_system_v3
+class hanging_system
 {
 private:
     unsigned long supply_start_time, air_change_time;
@@ -16,7 +16,7 @@ private:
     void servo_move(int deg);
 
 public:
-    hanging_system_v3(uint8_t spp_pin, uint8_t spm_pin, uint8_t air_pin, unsigned int deg_pdef, unsigned int deg_mdef, unsigned int t1, unsigned int t2, unsigned int tc);
+    hanging_system(uint8_t spp_pin, uint8_t spm_pin, uint8_t air_pin, unsigned int deg_pdef, unsigned int deg_mdef, unsigned int t1, unsigned int t2, unsigned int tc);
     void always_run_function();
     void hang(boolean hang_pos, unsigned int deg1, unsigned int deg2);
     void empty_hang(boolean hang_pos);
