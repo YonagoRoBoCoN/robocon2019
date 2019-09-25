@@ -48,7 +48,7 @@ void loop()
   wii_data[17] = Wii.getJoyXRight();
   wii_data[18] = Wii.getJoyYRight();
 
-  Serial.write(0xff);
-  Serial.write(wii_data, 19);
-  delay(5);
+  Serial.write(0xff);         //ヘッダ＝11111111
+  Serial.write(wii_data, 19); //19個のデータ送信
+  delay(5);                   //５ｍｓ待つ
 }
