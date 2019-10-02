@@ -50,5 +50,5 @@ void loop()
 
   Serial.write(0xff);         //ヘッダ＝11111111
   Serial.write(wii_data, 19); //19個のデータ送信
-  delay(5);                   //５ｍｓ待つ
+  delay(20);                   //５ｍｓ待つ
 }
