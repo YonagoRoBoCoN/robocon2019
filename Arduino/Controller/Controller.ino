@@ -8,14 +8,7 @@ Accessory Wii;
 //設定
 void setup()
 {
-  Serial.begin(115200); //シリアルボートレート
-  // pinMode(A2, OUTPUT);     //GNDを出力ピンで代用の時
-  // pinMode(A3, OUTPUT);     //+5Vを出力ピンで代用の時
-  // digitalWrite(A2, LOW);   //GNDを出力ピンで代用の時
-  // digitalWrite(A3, LOW);   //電源をLOWにしてコントローラ初期化
-  // delay(100);              //ちょい待つ
-  // digitalWrite(A3, HIGH);  //+5V出力
-  // delay(100);              //ちょい待つ
+  Serial.begin(115200);    //シリアルボートレート
   Wii.begin();             //コントローラ接続
   if (Wii.type == Unknown) //Wiiの種類が分からないとき
     Wii.type = WIICLASSIC; //クラシックコントローラーだよ
@@ -50,5 +43,5 @@ void loop()
 
   Serial.write(0xff);         //ヘッダ＝11111111
   Serial.write(wii_data, 19); //19個のデータ送信
-  delay(20);                   //５ｍｓ待つ
+  delay(20);                  //５ｍｓ待つ
 }

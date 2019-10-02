@@ -41,7 +41,7 @@ void loop()
       digitalWrite(13, sta13 % 2);
       sta13++;
       char c = Serial.read();
-      if (c == 0x7f)
+      if (c == 0xff)
       {
          uint8_t values[19];
          Serial.readBytes(values, 19);
@@ -66,7 +66,7 @@ void loop()
                             (now_button_state[10] << 4); //↓
 
          mdblack.listen();
-         mdblack.write(0x7f);
+         mdblack.write(0xff);
          mdblack.write(mdblack_datas, 4);
          // send_bytes(mdblack, send_datas, 5); //モーターとエアのデータ送信
 
@@ -104,34 +104,3 @@ void loop()
    unit_B.always_run_function();
    // delay(1);
 }
-
-// void motor_data_set(int *speed, uint8_t *send_data)
-// {
-//    send_data[3] = 0; //符号初期化
-//    for (int i = 0; i < 3; i++)
-//    {
-//       send_data[i] = abs(speed[i]);        //0~2 Byteは速度の大きさ
-//       send_data[3] |= (speed[i] < 0) << i; //3 Byte目は各モーターの回転方向
-//    }
-// }
-
-// void omni(int vx, int vy, int vrot, int *speed) //-31~32,-31~32,-15~16
-// {
-//    float vtheta = vrot * 10.0;              //旋回成分 16*10=160ismax
-//    float v = sqrt(vx * vx + vy * vy) * 5.0; //32*1.414=45   (pwm)255/45=5.6  5倍にしとく
-//    float theta = atan2(vy, vx);             //移動方向
-//    float R[3] = {0.0, 1.0, 1.0};            //タイヤの配置補正（タイヤ１は回転中心なので，vrot=0）
-//    for (int i = 0; i < 3; i++)              //スピード仮設定
-//       speed[i] = -v * cos(theta - PI * 2.0 / 3.0 * i) + vtheta * R[i];
-//    int max = 0;                //speed最大値
-//    for (int i = 0; i < 3; i++) //スピード最大値を取得
-//       max = max(abs(speed[i]), max);
-//    for (int i = 0; i < 3; i++) //スピード最大値の範囲を-255~255に収める．
-//       speed[i] = map(speed[i], -max, max, -255, 255);
-// // }
-
-// void emergency_situation(uint8_t *send_data)
-// {
-//    for (int i = 0; i < 3; i++)
-//       send_data[i] = 0;
-// }

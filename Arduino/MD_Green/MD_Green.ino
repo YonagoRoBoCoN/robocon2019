@@ -31,7 +31,7 @@ void loop()
 {
     if (Serial.available() > 0)
     {
-        if (Serial.read() == 0x7f)
+        if (Serial.read() == 0xff)
         {
             Serial.readBytes(mdblack_datas, 4);
             int x, y, rot;
