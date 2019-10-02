@@ -81,7 +81,7 @@ void omni(int vx, int vy, int vrot)
     float vtheta = vrot * 8.0;
     float v = sqrt(vx * vx + vy * vy) * 4.0;
     float theta = atan2(vy, vx);
-    float R[3] = {0.0, 1.0, 1.0};
+    float R[3] = {1.0, 1.0, 1.0};
     for (int i = 0; i < 3; i++)
         speed[i] = -v * cos(theta - PI * 2.0 / 3.0 * i) - vtheta * R[i];
     int max = 255;

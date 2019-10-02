@@ -1,7 +1,7 @@
 {
-    "board": "arduino:avr:pro",
-    "configuration": "cpu=16MHzatmega328",
+    "board": "arduino:avr:nano",
+    "configuration": "cpu=atmega328old",
     "programmer": "AVR ISP",
-    "sketch": "Arduino\\hanging_system\\hanging_system.ino",
-    "port": "COM14"
+    "sketch": "Arduino\\MD_Green\\MD_Green.ino",
+    "port": "COM11"
 }

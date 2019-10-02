@@ -4,17 +4,21 @@
 
 //つないだアクセサリーの名前をWiiとする
 Accessory Wii;
+int sta13 = 0;
 
 //設定
 void setup()
 {
-  Serial.begin(115200);    //シリアルボートレート
+  Serial.begin(115200); //シリアルボートレート
+  pinMode(13, OUTPUT);
   Wii.begin();             //コントローラ接続
   if (Wii.type == Unknown) //Wiiの種類が分からないとき
     Wii.type = WIICLASSIC; //クラシックコントローラーだよ
 }
 void loop()
 {
+  digitalWrite(13, sta13 % 2);
+  sta13++;
   //長さWII_VALUES_ARRAY_SIZE(=19)のwii_dataという配列を用意
   uint8_t wii_data[WII_VALUES_ARRAY_SIZE];
 

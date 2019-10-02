@@ -13,16 +13,7 @@ PwmMotor::PwmMotor(int R1pin, int R2pin, int PWMpin)
 
 void PwmMotor::speed(int speed)
 {
-  if (abs(speed) > 20)
-  {
-    digitalWrite(R1pinNo, speed > 0);
-    digitalWrite(R2pinNo, speed < 0);
-    analogWrite(PWMpinNo, abs(speed));
-  }
-  else
-  {
-    digitalWrite(R1pinNo, 1);
-    digitalWrite(R2pinNo, 0);
-    analogWrite(PWMpinNo, 0);
-  }
+  digitalWrite(R1pinNo, speed > 10);
+  digitalWrite(R2pinNo, speed < -10);
+  analogWrite(PWMpinNo, abs(speed));
 }
