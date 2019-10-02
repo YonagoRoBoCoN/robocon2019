@@ -38,11 +38,10 @@ void loop()
 {
    if (Serial.available() > 0)
    {
-      digitalWrite(13, sta13 % 2);
-      sta13++;
-      char c = Serial.read();
-      if (c == 0xff)
+      if (Serial.read() == 0xff)
       {
+         digitalWrite(13, sta13 % 2);
+         sta13++;
          uint8_t values[19];
          Serial.readBytes(values, 19);
          last_time = millis();

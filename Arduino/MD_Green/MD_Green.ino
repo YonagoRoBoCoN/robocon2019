@@ -9,9 +9,9 @@ const int air_pin[3] = {A1, A2, A3};
 boolean air_state[3];
 int speed[3];
 // uint8_t values[5];
-uint8_t mdblack_datas[4];
 
 unsigned long lasttime = 0;
+int sta13 = 0;
 
 PwmMotor motor[3] = {
     PwmMotor(4, 2, 3),
@@ -24,6 +24,7 @@ void setup()
 {
     for (int i = 0; i < 3; i++)
         pinMode(air_pin[i], OUTPUT);
+    pinMode(13, OUTPUT);
     Serial.begin(9600);
 }
 
@@ -33,15 +34,18 @@ void loop()
     {
         if (Serial.read() == 0xff)
         {
+            digitalWrite(13, sta13 % 2);
+            sta13++;
+            uint8_t mdblack_datas[4];
             Serial.readBytes(mdblack_datas, 4);
+            lasttime = millis();
+
             int x, y, rot;
             x = mdblack_datas[0] - 31;
             y = mdblack_datas[1] - 31;
             rot = mdblack_datas[2] - 15;
-
             omni(x, y, rot);
             air_move(mdblack_datas[3]);
-            lasttime = millis();
         }
     }
     if ((millis() - lasttime) > 100)
