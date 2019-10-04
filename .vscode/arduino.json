@@ -1,7 +1,7 @@
 {
-    "board": "arduino:avr:mega",
-    "configuration": "cpu=atmega2560",
+    "board": "arduino:avr:nano",
+    "configuration": "cpu=atmega328old",
     "programmer": "AVR ISP",
     "sketch": "Arduino\\MD_Green\\MD_Green.ino",
-    "port": "COM16"
+    "port": "COM11"
 }

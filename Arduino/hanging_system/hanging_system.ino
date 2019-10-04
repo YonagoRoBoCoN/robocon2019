@@ -32,6 +32,7 @@ void setup()
    digitalWrite(13, LOW);
    Serial.begin(115200);
    mdblack.begin(9600);
+   analogWrite(8, 255);
 }
 
 void loop()
