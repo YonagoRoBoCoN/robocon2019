@@ -44,18 +44,18 @@ void loop()
         {
             digitalWrite(13, sta13 % 2);
             sta13++;
-            uint8_t mdblack_datas[4];
-            Serial.readBytes(mdblack_datas, 4);
+            uint8_t read_data[4];
+            Serial.readBytes(read_data, 4);
             lasttime = millis();
 
-            int x, y, rot;
-            x = mdblack_datas[0] - 31;
-            y = mdblack_datas[1] - 31;
-            want_deg += (mdblack_datas[2] - 15) * -0.025;
+            int x, y;
+            x = read_data[0] - 31;
+            y = read_data[1] - 31;
+            want_deg += (read_data[2] - 15) * -0.025;
             float error_angle = want_deg - gyro_1.robot_angle;
             float rot = constrain(error_angle * 4.0, -255, 255);
             omni(x, y, rot);
-            air_move(mdblack_datas[3]);
+            air_move(read_data[3]);
         }
     }
     if ((millis() - lasttime) > 100)
@@ -86,7 +86,7 @@ void air_move(uint8_t air_cmd) //0:上下,1:前後,2:爪
         digitalWrite(air_pin[i], air_state[i]);
 }
 
-void omni(int vx, int vy, int vrot)
+void omni(int vx, int vy, float vrot)
 {
     float vtheta = vrot * 8.0;
     float v = sqrt(vx * vx + vy * vy) * 4.0;
