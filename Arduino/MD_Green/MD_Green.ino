@@ -13,6 +13,7 @@ int speed[3];
 
 unsigned long lasttime = 0;
 int sta13 = 0;
+float want_deg = 0;
 
 PwmMotor motor[3] = {
     PwmMotor(4, 2, 3),
@@ -20,7 +21,7 @@ PwmMotor motor[3] = {
     PwmMotor(A0, 8, 9),
 
 };
-gyro_integral gyro_sensor;
+gyro_integral gyro_1;
 
 void setup()
 {
@@ -28,15 +29,15 @@ void setup()
         pinMode(air_pin[i], OUTPUT);
     pinMode(13, OUTPUT);
     Serial.begin(9600);
-    gyro_sensor.init(500);
+    gyro_1.init(500);
 }
 
 void loop()
 {
-    gyro_sensor.integral();
+    gyro_1.integral();
     Serial.print(millis());
     Serial.print(",");
-    gyro_sensor.print_gyro_data();
+    gyro_1.print_gyro_data();
     if (Serial.available() > 0)
     {
         if (Serial.read() == 0xff)
@@ -50,7 +51,9 @@ void loop()
             int x, y, rot;
             x = mdblack_datas[0] - 31;
             y = mdblack_datas[1] - 31;
-            rot = mdblack_datas[2] - 15;
+            want_deg += (mdblack_datas[2] - 15) * -0.025;
+            float error_angle = want_deg - gyro_1.robot_angle;
+            float rot = constrain(error_angle * 4.0, -255, 255);
             omni(x, y, rot);
             air_move(mdblack_datas[3]);
         }

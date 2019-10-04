@@ -8,11 +8,12 @@
 class gyro_integral
 {
 private:
-    float gyro_val, gyro_offset, robot_angle;
+    float gyro_val, gyro_offset;
     unsigned long last_time;
     L3G gyro;
 
 public:
+    float robot_angle;
     gyro_integral(void);
     void init(int setup_count);
     void integral(void);
