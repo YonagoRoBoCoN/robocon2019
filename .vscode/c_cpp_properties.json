@@ -3,6 +3,8 @@
         {
             "name": "Win32",
             "includePath": [
+                "D:\\OneDrive - 独立行政法人 国立高等専門学校機構\\ドキュメント\\Arduino\\libraries\\L3G",
+                "D:\\OneDrive - 独立行政法人 国立高等専門学校機構\\ドキュメント\\Arduino\\libraries\\MsTimer2",
                 "D:\\Arduino\\tools\\**",
                 "D:\\Arduino\\hardware\\arduino\\avr\\**"
             ],
