@@ -34,10 +34,7 @@ void setup()
 
 void loop()
 {
-    gyro_1.integral();
-    Serial.print(millis());
-    Serial.print(",");
-    gyro_1.print_gyro_data();
+
     if (Serial.available() > 0)
     {
         if (Serial.read() == 0xff)
@@ -48,14 +45,23 @@ void loop()
             Serial.readBytes(read_data, 4);
             lasttime = millis();
 
+            gyro_1.integral();
+
             int x, y;
             x = read_data[0] - 31;
             y = read_data[1] - 31;
-            want_deg += (read_data[2] - 15) * -0.025;
+            want_deg += (read_data[2] - 15) * -0.001;
             float error_angle = want_deg - gyro_1.robot_angle;
             float rot = constrain(error_angle * 4.0, -255, 255);
             omni(x, y, rot);
             air_move(read_data[3]);
+            Serial.print(millis());
+            Serial.print(",");
+            Serial.print(want_deg);
+            Serial.print(",");
+            Serial.print(read_data[2]);
+            Serial.print(",");
+            gyro_1.print_gyro_data();
         }
     }
     if ((millis() - lasttime) > 100)
