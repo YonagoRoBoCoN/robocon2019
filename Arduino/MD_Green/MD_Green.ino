@@ -34,6 +34,9 @@ void setup()
 void loop()
 {
     gyro_sensor.integral();
+    Serial.print(millis());
+    Serial.print(",");
+    gyro_sensor.print_gyro_data();
     if (Serial.available() > 0)
     {
         if (Serial.read() == 0xff)

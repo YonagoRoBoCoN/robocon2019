@@ -16,6 +16,7 @@ public:
     gyro_integral(void);
     void init(int setup_count);
     void integral(void);
+    void print_gyro_data(void);
 };
 
 #endif

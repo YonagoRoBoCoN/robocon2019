@@ -33,8 +33,9 @@ void gyro_integral::integral()
     last_time = now;
     gyro_val = gyro_val * 0.9 + ((int)gyro.g.z - gyro_offset) * 0.1;
     robot_angle += gyro_val * dt * 0.00875 / 1000000.0;
-    Serial.print(now % 3);
-    Serial.print(",");
+}
+void gyro_integral::print_gyro_data()
+{
     Serial.print((int)gyro.g.z * 0.00875);
     Serial.print(",");
     Serial.print(gyro_val * 0.00875);
