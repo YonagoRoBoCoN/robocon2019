@@ -4,6 +4,7 @@
 //Black Motor Driver &インチキエアー
 // #include <serial_communication_v0.h>
 #include "PwmMotor.h"
+#include "gyro_integral.h"
 //上下，前後，つかむ
 const int air_pin[3] = {A1, A2, A3};
 boolean air_state[3];
@@ -19,6 +20,7 @@ PwmMotor motor[3] = {
     PwmMotor(A0, 8, 9),
 
 };
+gyro_integral gyro_sensor;
 
 void setup()
 {
@@ -26,10 +28,12 @@ void setup()
         pinMode(air_pin[i], OUTPUT);
     pinMode(13, OUTPUT);
     Serial.begin(9600);
+    gyro_sensor.init(500);
 }
 
 void loop()
 {
+    gyro_sensor.integral();
     if (Serial.available() > 0)
     {
         if (Serial.read() == 0xff)

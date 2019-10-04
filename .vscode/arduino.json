@@ -2,6 +2,6 @@
     "board": "arduino:avr:mega",
     "configuration": "cpu=atmega2560",
     "programmer": "AVR ISP",
-    "sketch": "Arduino\\gyro_test\\gyro_test.ino",
+    "sketch": "Arduino\\MD_Green\\MD_Green.ino",
     "port": "COM16"
 }
