@@ -14,6 +14,7 @@ int speed[3];
 unsigned long lasttime = 0;
 int sta13 = 0;
 float want_deg = 0;
+int x, y;
 
 PwmMotor motor[3] = {
     PwmMotor(4, 2, 3),
@@ -29,6 +30,7 @@ void setup()
         pinMode(air_pin[i], OUTPUT);
     pinMode(13, OUTPUT);
     Serial.begin(9600);
+    Serial.println("tim,want,jsx,d/s,fild/s,angl");
     gyro_1.init(500);
 }
 
@@ -45,15 +47,10 @@ void loop()
             Serial.readBytes(read_data, 4);
             lasttime = millis();
 
-            gyro_1.integral();
-
-            int x, y;
             x = read_data[0] - 31;
             y = read_data[1] - 31;
             want_deg += (read_data[2] - 15) * -0.225;
-            float error_angle = want_deg + gyro_1.robot_angle;
-            float rot = constrain(error_angle * 4.0, -255, 255);
-            omni(x, y, rot);
+
             air_move(read_data[3]);
             Serial.print(millis());
             Serial.print(",");
@@ -64,8 +61,18 @@ void loop()
             gyro_1.print_gyro_data();
         }
     }
-    if ((millis() - lasttime) > 100)
+    if ((millis() - lasttime) > 1000)
+    {
         omni(0, 0, 0);
+        want_deg = 0.0;
+        gyro_1.robot_angle = 0.0;
+    }
+
+    gyro_1.integral();
+    float error_angle = want_deg - gyro_1.robot_angle;
+    float rot = constrain(error_angle * 4.0, -255, 255);
+    omni(x, y, rot);
+    delay(4);
 }
 
 void air_move(uint8_t air_cmd) //0:上下,1:前後,2:爪
@@ -94,7 +101,7 @@ void air_move(uint8_t air_cmd) //0:上下,1:前後,2:爪
 
 void omni(int vx, int vy, float vrot)
 {
-    float vtheta = vrot * 8.0;
+    float vtheta = vrot;
     float v = sqrt(vx * vx + vy * vy) * 4.0;
     float theta = atan2(vy, vx);
     float R[3] = {1.0, 1.0, 1.0};

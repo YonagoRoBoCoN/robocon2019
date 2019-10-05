@@ -2,6 +2,6 @@
     "board": "arduino:avr:nano",
     "configuration": "cpu=atmega328old",
     "programmer": "AVR ISP",
-    "sketch": "Arduino\\hanging_system\\hanging_system.ino",
+    "sketch": "Arduino\\MD_Green\\MD_Green.ino",
     "port": "COM10"
 }

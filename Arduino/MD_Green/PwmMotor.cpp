@@ -13,7 +13,7 @@ PwmMotor::PwmMotor(int R1pin, int R2pin, int PWMpin)
 
 void PwmMotor::speed(int speed)
 {
-  digitalWrite(R1pinNo, speed > 10);
-  digitalWrite(R2pinNo, speed < -10);
+  digitalWrite(R1pinNo, speed > 15);
+  digitalWrite(R2pinNo, speed < -15);
   analogWrite(PWMpinNo, abs(speed));
 }
