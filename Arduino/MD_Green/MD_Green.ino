@@ -50,8 +50,8 @@ void loop()
             int x, y;
             x = read_data[0] - 31;
             y = read_data[1] - 31;
-            want_deg += (read_data[2] - 15) * -0.001;
-            float error_angle = want_deg - gyro_1.robot_angle;
+            want_deg += (read_data[2] - 15) * -0.225;
+            float error_angle = want_deg + gyro_1.robot_angle;
             float rot = constrain(error_angle * 4.0, -255, 255);
             omni(x, y, rot);
             air_move(read_data[3]);
