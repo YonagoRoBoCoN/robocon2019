@@ -3,10 +3,10 @@
 #include <SoftwareSerial.h>
 
 //初期位置，供給位置
-const int degpA[2] = {90, 80};
-const int degmA[2] = {90, 100};
-const int degpB[2] = {90, 100};
-const int degmB[2] = {90, 80};
+const int degpA[2] = {90, 0};
+const int degmA[2] = {90, 0};
+const int degpB[2] = {90, 0};
+const int degmB[2] = {90, 0};
 
 //spp,spm,air,degpdef,degmdef,t1,t2,tc
 hanging_system unit_A(2, 3, 11, degpA[0], degmA[0], 500, 300, 1000);
@@ -27,6 +27,8 @@ int sta13 = 0;
 void setup()
 {
    pinMode(13, OUTPUT);
+   pinMode(8, OUTPUT);
+   digitalWrite(8, HIGH);
    digitalWrite(13, HIGH);
    delay(1000);
    digitalWrite(13, LOW);
