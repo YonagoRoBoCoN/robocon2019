@@ -11,10 +11,10 @@ boolean air_state[3];
 int speed[3];
 // uint8_t values[5];
 
-unsigned long lasttime = 0;
-int sta13 = 0;
-float want_deg = 0;
-int x, y;
+unsigned long serial_tim_last = 0, gyro_tim_last = 0;
+boolean sta13 = false;
+float want_deg = 0, rot = 0.0, error_angle = 0.0;
+int vx, vy, vrot, vrot_old;
 
 PwmMotor motor[3] = {
     PwmMotor(4, 2, 3),
@@ -30,49 +30,57 @@ void setup()
         pinMode(air_pin[i], OUTPUT);
     pinMode(13, OUTPUT);
     Serial.begin(9600);
-    Serial.println("tim,want,jsx,d/s,fild/s,angl");
+    // Serial.println("tim,want,jsx,d/s,fild/s,angl");
     gyro_1.init(500);
 }
 
 void loop()
 {
-
-    if (Serial.available() > 0)
+    if ((millis() - gyro_tim_last) > 4) //4ms以上経過したら積分
     {
-        if (Serial.read() == 0xff)
-        {
-            digitalWrite(13, sta13 % 2);
-            sta13++;
-            uint8_t read_data[4];
-            Serial.readBytes(read_data, 4);
-            lasttime = millis();
+        gyro_1.integral();        //積分
+        gyro_tim_last = millis(); //時間更新
+    }
 
-            x = read_data[0] - 31;
-            y = read_data[1] - 31;
-            want_deg += (read_data[2] - 15) * -0.225;
+    if ((millis() - serial_tim_last) > 1000) //操縦が長らくないときリセット
+    {
+        vx = 0;                   //速度0
+        vy = 0;                   //速度0
+        omni(0, 0, 0);            //スピードオフ
+        want_deg = 0.0;           //目標リセット
+        gyro_1.robot_angle = 0.0; //ロボット角度リセット
+    }
+    error_angle = want_deg - gyro_1.robot_angle;   //誤差
+    rot = constrain(error_angle * 4.0, -255, 255); //誤差補正出力
+    // omni(vx, vy, rot);
+    // delay(4);
+
+    if (Serial.available() > 0) //シリアル受信時
+    {
+        if (Serial.read() == 0xff) //ヘッダなら
+        {
+            digitalWrite(13, sta13);        //LEDちかちか
+            sta13 = !sta13;                 //LEDちかちか
+            uint8_t read_data[4];           //受信データ
+            Serial.readBytes(read_data, 4); //受信
+            serial_tim_last = millis();     //シリアルの受信時間更新
+
+            vx = read_data[0] - 31;   //-31~32
+            vy = read_data[1] - 31;   //-31~32
+            vrot = read_data[2] - 15; //-15~16
+
+            if ((vrot == 0) && (vrot_old != 0)) //JSが原点に戻った時
+                want_deg = gyro_1.robot_angle;  //それを目標角度にする
+            else                                //その他
+                rot = vrot * 15;                //JSが操作中は旋回速度を指定
+            vrot_old = vrot;                    //かこJS更新
 
             air_move(read_data[3]);
-            Serial.print(millis());
-            Serial.print(",");
-            Serial.print(want_deg);
-            Serial.print(",");
-            Serial.print(read_data[2]);
-            Serial.print(",");
-            gyro_1.print_gyro_data();
         }
     }
-    if ((millis() - lasttime) > 1000)
-    {
-        omni(0, 0, 0);
-        want_deg = 0.0;
-        gyro_1.robot_angle = 0.0;
-    }
-
-    gyro_1.integral();
-    float error_angle = want_deg - gyro_1.robot_angle;
-    float rot = constrain(error_angle * 4.0, -255, 255);
-    omni(x, y, rot);
-    delay(4);
+    if (vx == 0 && vy == 0)
+        rot = 0;
+    omni(vx, vy, rot); //速度出力
 }
 
 void air_move(uint8_t air_cmd) //0:上下,1:前後,2:爪
