@@ -100,8 +100,8 @@ void air_move(uint8_t air_cmd) //0:上下,1:前後,2:爪
 
     if ((air_cmd >> 0) & 1) //爪開閉
     {
-        if (air_state[1])                 //腕前の時だけ
-            air_state[2] = !air_state[2]; //切り替え可能
+        // if (air_state[1])                 //腕前の時だけ
+        air_state[2] = !air_state[2]; //切り替え可能
     }
     for (int i = 0; i < 3; i++)
         digitalWrite(air_pin[i], air_state[i]);
