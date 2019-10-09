@@ -29,16 +29,20 @@ void hanging_system::air_change()
 }
 void hanging_system::hang(boolean hang_pos, unsigned int deg1, unsigned int deg2) //指定したほうに供給(deg2=初期位置)
 {
-    deg_1 = deg1;
-    deg_2 = deg2;
-    has_requested_hanging = true; //供給リクエスト
-    if (now_air_pos != hang_pos)  //今供給不可能位置なら
-        air_change();             //エアを逆にして，
+    if (!air_is_moving)
+    {
+        deg_1 = deg1;
+        deg_2 = deg2;
+        has_requested_hanging = true; //供給リクエスト
+        if (now_air_pos != hang_pos)  //今供給不可能位置なら
+            air_change();             //エアを逆にして，
+    }
 }
 void hanging_system::empty_hang(boolean hang_pos) //かけずに指定されたほうを上げる
 {
-    if (now_air_pos == hang_pos) //逆位置なら
-        air_change();            //エアを逆にする
+    if (!air_is_moving)
+        if (now_air_pos == hang_pos) //逆位置なら
+            air_change();            //エアを逆にする
 }
 void hanging_system::always_run_function() //常時動作して状態更新関数
 {
