@@ -3,10 +3,10 @@
 #include <SoftwareSerial.h> //MDグリーンへの送信用ソフトウェアシリアル
 
 //初期位置，供給位置
-const int degpA[2] = {90, 0}; //サーボA-plus
-const int degmA[2] = {90, 0}; //サーボA-minus
-const int degpB[2] = {90, 0}; //サーボA-plus
-const int degmB[2] = {90, 0}; //サーボA-minus
+const int degpA[2] = {90, 170}; //サーボA-plus
+const int degmA[2] = {90, 170}; //サーボA-minus
+const int degpB[2] = {90, 170}; //サーボA-plus
+const int degmB[2] = {90, 170}; //サーボA-minus
 
 //上の時の供給，下の時の供給,エアー，上の供給角度
 //spp,spm,air,degpdef,degmdef,t1,t2,tc
@@ -51,14 +51,18 @@ void loop()
             last_button_state[i] = now_button_state[i];                    //今を過去に
          }
 
-         mdblack_datas[0] = values[15];                  //LX
-         mdblack_datas[1] = values[16];                  //LY
-         mdblack_datas[2] = values[17];                  //XR
-         mdblack_datas[3] = (button_rize[0] << 0) |      //開閉
-                            (now_button_state[7] << 1) | //出っ張る
-                            (now_button_state[9] << 2) | //縮む
-                            (now_button_state[8] << 3) | //↑
-                            (now_button_state[10] << 4); //↓
+         mdblack_datas[0] = values[15];                   //LX
+         mdblack_datas[1] = values[16];                   //LY
+         mdblack_datas[2] = values[17];                   //XR
+         mdblack_datas[3] = (button_rize[0] << 0) |       //開閉
+                            (now_button_state[7] << 1) |  //出っ張る
+                            (now_button_state[9] << 2) |  //縮む
+                            (now_button_state[8] << 3) |  //↑
+                            (now_button_state[10] << 4) | //↓
+                            ((now_button_state[1] &&
+                              now_button_state[5])
+                             << 5) |                    //X
+                            (now_button_state[2]) << 6; //Y
 
          mdblack.listen();    //ソフトウェアシリアルを使えるように
          mdblack.write(0xff); //ヘッダ送信
