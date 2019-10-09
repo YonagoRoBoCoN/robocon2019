@@ -49,6 +49,7 @@ void loop()
         omni(0, 0, 0);            //スピードオフ
         want_deg = 0.0;           //目標リセット
         gyro_1.robot_angle = 0.0; //ロボット角度リセット
+        gyro_1.init(500);
     }
     error_angle = want_deg - gyro_1.robot_angle;   //誤差
     rot = constrain(error_angle * 4.0, -255, 255); //誤差補正出力
