@@ -31,7 +31,7 @@ void setup()
     pinMode(13, OUTPUT);
     Serial.begin(9600);
     // Serial.println("tim,want,jsx,d/s,fild/s,angl");
-    gyro_1.init(500);
+    gyro_1.init(200);
 }
 
 void loop()
@@ -40,21 +40,14 @@ void loop()
     {
         gyro_1.integral();        //積分
         gyro_tim_last = millis(); //時間更新
+        Serial.println(gyro_1.robot_angle);
     }
 
     if ((millis() - serial_tim_last) > 1000) //操縦が長らくないときリセット
-    {
-        vx = 0;                   //速度0
-        vy = 0;                   //速度0
-        omni(0, 0, 0);            //スピードオフ
-        want_deg = 0.0;           //目標リセット
-        gyro_1.robot_angle = 0.0; //ロボット角度リセット
-        gyro_1.init(500);
-    }
+        reset();
+
     error_angle = want_deg - gyro_1.robot_angle;   //誤差
     rot = constrain(error_angle * 4.0, -255, 255); //誤差補正出力
-    // omni(vx, vy, rot);
-    // delay(4);
 
     if (Serial.available() > 0) //シリアル受信時
     {
@@ -96,14 +89,15 @@ void air_move(uint8_t air_cmd) //0:上下,1:前後,2:爪
     else if ((air_cmd >> 2) & 1) //後
         air_state[1] = false;
 
-    if (!air_state[1]) //縮めるとき開けない
-        air_state[2] = false;
-
-    if ((air_cmd >> 0) & 1) //爪開閉
-    {
-        // if (air_state[1])                 //腕前の時だけ
+    if ((air_cmd >> 0) & 1)           //爪開閉
         air_state[2] = !air_state[2]; //切り替え可能
+
+    if ((air_cmd >> 5) & 1) //b
+    {
+        reset();          //全初期化
+        gyro_1.init(200); //ジャイロ初期化
     }
+
     for (int i = 0; i < 3; i++)
         digitalWrite(air_pin[i], air_state[i]);
 }
@@ -124,4 +118,13 @@ void omni(int vx, int vy, float vrot)
         speed[i] = map(speed[i], -max, max, -255, 255);
         motor[i].speed(speed[i]);
     }
+}
+
+void reset()
+{
+    vx = 0;                   //速度0
+    vy = 0;                   //速度0
+    omni(0, 0, 0);            //スピードオフ
+    want_deg = 0.0;           //目標リセット
+    gyro_1.robot_angle = 0.0; //ロボット角度リセット
 }
